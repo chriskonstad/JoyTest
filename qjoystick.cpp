@@ -1,5 +1,4 @@
 #include "qjoystick.h"
-#include <QtDebug>
 
 QJoystick::QJoystick()
 {
@@ -128,13 +127,10 @@ void QJoystick::getData()
             //Check values
             if(mHatsCurrent[i][it.key()] && !mHatsPrevious[i][it.key()])
             {
-                qDebug() << "Hat pressed: " << it.key();
                 emit hatPressed(i, it.key());
             }
             else if(!mHatsCurrent[i][it.key()] && mHatsPrevious[i][it.key()])
             {
-                qDebug() << "Hat toggled: " << it.key();
-                qDebug() << "Hat released: " << it.key();
                 emit hatToggled(i, it.key(), mHatsToggled[i][it.key()]);
                 mHatsToggled[i][it.key()] = !mHatsToggled[i].value(it.key());
                 emit hatReleased(i, it.key());
