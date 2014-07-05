@@ -113,7 +113,7 @@ void QJoystick::getData()
         {
             mHatsCurrent[i].insert(hat, true);
             mHatsPrevious[i].insert(hat, false);
-            mHatsToggled[i].insert(hat, false);
+            mHatsToggled[i].insert(hat, true);
         }
 
         QMapIterator<int, bool> it(mHatsCurrent[i]);
