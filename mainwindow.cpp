@@ -23,12 +23,19 @@ MainWindow::MainWindow(QWidget *parent) :
         exit(-1);
     }
 
+    //Configure the joystick
+    joystick->currentJoystick(0);   //choose the first joystick
+    for(int i=0; i< joystick->numAxes(); i++)
+    {
+        Q_ASSERT(joystick->deadzone(i, (i != 2 && i != 5 ? 16000 : 0)));
+    }
+
+
     vBox = (QVBoxLayout*)ui->verticalLayoutWidget->layout();
 
     //Get Joystick Name
     QLabel *jsName = new QLabel();
     ui->verticalLayoutWidget->layout()->addWidget(jsName);
-    joystick->currentJoystick(0);   //choose the first joystick
     jsName->setText(joystick->name());
 
     //Set up the UI for the buttons toggled state

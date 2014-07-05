@@ -1,4 +1,6 @@
 #include "qjoystickinterface.h"
+#include <QtGlobal>
+#include <QtDebug>
 
 QJoystickInterface::QJoystickInterface()
 {
@@ -52,7 +54,8 @@ double QJoystickInterface::bilinearConstant() const
 bool QJoystickInterface::deadzone(int axisId, int size)
 {
     bool ret = false;
-    if(0 <= axisId && axisId < mDeadzones.count() && size >= 0)
+    if(0 <= axisId && axisId < mDeadzones.count() &&
+            0 <= size && size <= 32767)
     {
         mDeadzones[axisId] = size;
         ret = true;
@@ -108,4 +111,41 @@ void QJoystickInterface::init()
 
     mBilinearEnabled = false;
     mBilinearConstant = 1;  //TODO MIGHT BE 0
+}
+
+void QJoystickInterface::processDeadzones()
+{
+    for(int i=0; i<mAxesCurrent.count(); i++)
+    {
+        int dz = mDeadzones[i];
+        if(qAbs(mAxesCurrent[i]) <= dz)
+        {
+            mAxesCurrent[i] = 0;
+        }
+        else
+        {
+            const int posMax = 32767;
+            const int negMax = -32768;
+            double slope;
+            int b;
+            if(mAxesCurrent[i] > 0)
+            {
+                slope = (double)posMax/(posMax-dz);
+                b = -1 * slope * dz;
+            }
+            else
+            {
+                slope = (double)negMax/(negMax+dz);
+                b = slope * dz;
+            }
+
+            //Calculate the new value
+            mAxesCurrent[i] = (int)(mAxesCurrent[i] * slope) + b;
+        }
+    }
+}
+
+void QJoystickInterface::processBilinear()
+{
+    //TODO: Implement
 }

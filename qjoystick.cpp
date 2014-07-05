@@ -82,7 +82,13 @@ void QJoystick::getData()
     {
         mAxesCurrent[i] = SDL_JoystickGetAxis(mJoystick, i);
     }
-    //TODO: Add in bilinear and deadzone reading code!
+
+    //Process axis data
+    processDeadzones();
+    if(bilinearEnabled())
+    {
+        processBilinear();
+    }
 
     for(int i=0;i<numButtons();i++)
     {
