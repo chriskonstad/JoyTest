@@ -9,7 +9,11 @@
 #include <QList>
 #include "qjoystickinterface.h"
 
+#ifdef Q_OS_LINUX
 #include <SDL/SDL.h>
+#else
+#include "depends/windows/SDL/SDL.h"
+#endif
 
 class QJoystick: public QJoystickInterface
 {

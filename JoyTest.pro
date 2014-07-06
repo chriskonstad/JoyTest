@@ -23,4 +23,12 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
+unix:!macx{
 LIBS += -lSDL
+}
+
+win32{
+DEFINES += SDL_WIN
+LIBS += -L../JoyTest/depends/windows
+LIBS += -lSDL
+}

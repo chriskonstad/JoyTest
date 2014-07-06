@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Exit if no joystick attached
     if(joystick->numJoysticks() == 0)
     {
+        qCritical() << "No joystick attached. QUITTING...";
         exit(-1);
     }
 
@@ -152,5 +153,4 @@ void MainWindow::onAxesUpdated(QList<int> values)
     {
         axesValues[i]->setValue(values[i]);
     }
-    qDebug() << values[2];
 }

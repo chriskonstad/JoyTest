@@ -1,5 +1,4 @@
 #include "qjoystick.h"
-#include <QtDebug>
 
 QJoystick::QJoystick()
 {
@@ -143,7 +142,6 @@ void QJoystick::getData()
     //Process axis data
     processDeadzones();
     processBilinear();
-    qDebug() << mAxesCurrent[2];
 
     emit axesUpdated(mAxesCurrent);
 }

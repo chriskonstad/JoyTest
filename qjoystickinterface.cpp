@@ -1,6 +1,5 @@
 #include "qjoystickinterface.h"
 #include <QtGlobal>
-#include <QtDebug>
 
 QJoystickInterface::QJoystickInterface()
 {
