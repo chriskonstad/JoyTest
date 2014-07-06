@@ -1,4 +1,5 @@
 #include "qjoystick.h"
+#include <QtDebug>
 
 QJoystick::QJoystick()
 {
@@ -78,18 +79,6 @@ void QJoystick::getData()
     SDL_Event event;
     SDL_PollEvent(&event);
 
-    for(int i=0;i<numAxes();i++)
-    {
-        mAxesCurrent[i] = SDL_JoystickGetAxis(mJoystick, i);
-    }
-
-    //Process axis data
-    processDeadzones();
-    if(bilinearEnabled())
-    {
-        processBilinear();
-    }
-
     for(int i=0;i<numButtons();i++)
     {
         mButtonsCurrent[i] = SDL_JoystickGetButton(mJoystick, i);
@@ -145,6 +134,16 @@ void QJoystick::getData()
             mHatsPrevious[i][it.key()] = mHatsCurrent[i][it.key()];
         }
     }
+
+    for(int i=0;i<numAxes();i++)
+    {
+        mAxesCurrent[i] = SDL_JoystickGetAxis(mJoystick, i);
+    }
+
+    //Process axis data
+    processDeadzones();
+    processBilinear();
+    qDebug() << mAxesCurrent[2];
 
     emit axesUpdated(mAxesCurrent);
 }

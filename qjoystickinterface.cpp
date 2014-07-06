@@ -110,7 +110,7 @@ void QJoystickInterface::init()
     }
 
     mBilinearEnabled = false;
-    mBilinearConstant = 1;  //TODO MIGHT BE 0
+    mBilinearConstant = 1;
 }
 
 void QJoystickInterface::processDeadzones()
@@ -147,5 +147,34 @@ void QJoystickInterface::processDeadzones()
 
 void QJoystickInterface::processBilinear()
 {
-    //TODO: Implement
+    if(bilinearEnabled())
+    {
+        Q_ASSERT(mBilinearConstant > 0);
+        double bilinearThreshold = 1.0/mBilinearConstant;
+        const int min = -32768;
+        const int max = 32767;
+        for(int i=0; i<mAxesCurrent.count(); i++)
+        {
+            Q_ASSERT(min <= mAxesCurrent[i]);
+            Q_ASSERT(mAxesCurrent[i] <= max);
+            int cur = mAxesCurrent[i];
+            //If the stick is within the range
+            if(bilinearThreshold * min <= cur && cur <= bilinearThreshold * max)
+            {
+                mAxesCurrent[i] = (mAxesCurrent[i] / mBilinearConstant);
+            }
+            //If the stick is in the upper section of the range
+            else if((bilinearThreshold * max) < cur && cur <= max)
+            {
+                mAxesCurrent[i] = (mBilinearConstant * cur) +
+                    ((mBilinearConstant * min) + max) + 2;
+            }
+            //If the stick is in the lower section of the range
+            else if(min <= cur && cur < (bilinearThreshold * min))
+            {
+                mAxesCurrent[i] = (mBilinearConstant * cur) +
+                    ((mBilinearConstant * max) + min) + 1;
+            }
+        }
+    }
 }
